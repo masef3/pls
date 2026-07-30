@@ -1,8 +1,10 @@
 from pathlib import Path
 import sys
+import argparse as ap
+from typing import Any
 
 
-class Target:
+class Cleaner:
     def __init__(self) -> None:
         self.__path = Path.home().joinpath("Downloads")
 
@@ -19,24 +21,61 @@ class Target:
         self.__path = new_path
         print("Path has been set")
 
+    def show_help(self) -> None:
+        pass
+
+    def scatter(self, opt: Any) -> None:
+        pass
+
+    def get_ext(self) -> set[str]:
+        res = set()
+        for file in self.__path.iterdir():
+            if file.is_file() and file.suffix not in res:
+                res.add(file.suffix)
+
+        return res
+
+    def package(self, extensions: set[str]) -> None:
+        for ext in extensions:
+            ext_p = self.__path.joinpath(ext[1:])
+            if not ext_p.is_dir():
+                ext_p.mkdir()
+
+
+def confirmation(action: str) -> bool:
+    count = 0
+    while count < 5:
+        inp = input(f"Do you really want to {action}: y/n")
+        if inp == "yes" or inp == "y":
+            return True
+        elif inp == "n" or "no":
+            return False
+        count += 1
+
+    return False
+
 
 def main() -> None:
-    target = Target()
     args = sys.argv
+    cleaner = Cleaner()
     if (len(args) < 2):
-        print("Not enough arguments")  # DO HELP OUTPUT HERE
+        # help
         return
 
     arg = args[1]
     match arg:
         case "show":
-            target.show_path()
+            cleaner.show_path()
         case "change":
             if (len(args) < 3):
-                target.change_path(None)
+                cleaner.change_path(None)
             else:
-                target.change_path(Path(args[2]))
-
+                cleaner.change_path(Path(args[2]))
+        case "clean":
+            inp = confirmation("package")
+            if inp:
+                exts = cleaner.get_ext()
+                cleaner.package(exts)
         case _:
             print("No match for given argument")
 
