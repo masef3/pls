@@ -1,8 +1,8 @@
 from pathlib import Path
 import sys
-import argparse as ap
 from typing import Any
 from shutil import move
+from cmd_args import help
 
 
 class Cleaner:
@@ -21,9 +21,6 @@ class Cleaner:
         assert new_path is not None
         self.__path = new_path
         print("Path has been set")
-
-    def show_help(self) -> None:
-        pass
 
     def scatter(self, opt: Any) -> None:
         pass
@@ -67,11 +64,15 @@ def main() -> None:
     args = sys.argv
     cleaner = Cleaner()
     if (len(args) < 2):
-        # help
+        help()
         return
 
     arg = args[1]
     match arg:
+        case "--help":
+            help()
+        case "-h":
+            help()
         case "show":
             cleaner.show_path()
         case "change":
@@ -83,7 +84,7 @@ def main() -> None:
             inp = confirmation("package")
             if inp:
                 exts = cleaner.get_ext()
-                cleaner.package(exts)
+                cleaner.package(exts) 
         case _:
             print("No match for given argument")
 
