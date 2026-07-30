@@ -2,6 +2,7 @@ from pathlib import Path
 import sys
 import argparse as ap
 from typing import Any
+from shutil import move
 
 
 class Cleaner:
@@ -27,25 +28,32 @@ class Cleaner:
     def scatter(self, opt: Any) -> None:
         pass
 
-    def get_ext(self) -> set[str]:
-        res = set()
+    def get_ext(self) -> dict[Path, Path]:
+        res: dict[Path, Path] = {}
         for file in self.__path.iterdir():
-            if file.is_file() and file.suffix not in res:
-                res.add(file.suffix)
+            filename, file_ext = Path(file.stem), Path(file.suffix)
+            if Path(file).is_file() and file_ext not in res.values():
+                res[filename] = file_ext
 
         return res
 
-    def package(self, extensions: set[str]) -> None:
-        for ext in extensions:
-            ext_p = self.__path.joinpath(ext[1:])
-            if not ext_p.is_dir():
-                ext_p.mkdir()
+    def package(self, files: dict[Path, Path]) -> None:
+        for name, ext in files.items():
+            if ext.is_dir():
+                continue
+
+            suff = ext.name.lstrip(".")
+            ext_p = self.__path.joinpath(suff)
+            full_path = self.__path.joinpath(f"{name.name}.{suff}")
+
+            ext_p.mkdir(parents=True, exist_ok=True)
+            move(full_path, ext_p.joinpath(full_path.name))
 
 
 def confirmation(action: str) -> bool:
     count = 0
     while count < 5:
-        inp = input(f"Do you really want to {action}: y/n")
+        inp = input(f"Do you really want to {action}: y/n: \n")
         if inp == "yes" or inp == "y":
             return True
         elif inp == "n" or "no":
