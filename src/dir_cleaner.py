@@ -3,6 +3,7 @@ import sys
 from typing import Any
 from shutil import move
 from cmd_args import help
+import watch_module as wm
 
 
 class Cleaner:
@@ -11,6 +12,9 @@ class Cleaner:
 
     def show_path(self) -> None:
         print(self.__path)
+    
+    def access_path(self) -> Path:
+        return self.__path
 
     def change_path(self, new_path: Path | None) -> None:
         if new_path is None:
@@ -22,14 +26,11 @@ class Cleaner:
         self.__path = new_path
         print("Path has been set")
 
-    def scatter(self, opt: Any) -> None:
-        pass
-
     def get_ext(self) -> dict[Path, Path]:
         res: dict[Path, Path] = {}
         for file in self.__path.iterdir():
             filename, file_ext = Path(file.stem), Path(file.suffix)
-            if Path(file).is_file() and file_ext not in res.values():
+            if Path(file).is_file():
                 res[filename] = file_ext
 
         return res
@@ -60,6 +61,11 @@ def confirmation(action: str) -> bool:
     return False
 
 
+def clean(cleaner: Cleaner) -> None:
+    files = cleaner.get_ext()
+    cleaner.package(files)
+
+
 def main() -> None:
     args = sys.argv
     cleaner = Cleaner()
@@ -84,7 +90,17 @@ def main() -> None:
             inp = confirmation("package")
             if inp:
                 exts = cleaner.get_ext()
-                cleaner.package(exts) 
+                cleaner.package(exts)
+        case "cleanbg":
+            inp = confirmation("watch and package")
+            if inp:
+                runner = wm.Runner(cleaner.access_path(), False)
+                runner.start()
+        case "watch":
+            inp = confirmation("watch")
+            if inp:
+                runner = wm.Runner(cleaner.access_path(), True)
+                runner.start()
         case _:
             print("No match for given argument")
 
