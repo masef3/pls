@@ -8,6 +8,8 @@ def help() -> None:
     Commands:
         clean       Recycles files into directories that differ by extension
         change_path Changes working directory of the program
+        watch       Watches and prints all modifications of wanted directory
+        cleanbg     Runs online cleaner
 
     Flags:
         -h, --help  help for pls
