@@ -1,6 +1,5 @@
 from pathlib import Path
 import sys
-from typing import Any
 from shutil import move
 from cmd_args import help
 import watch_module as wm
@@ -12,7 +11,7 @@ class Cleaner:
 
     def show_path(self) -> None:
         print(self.__path)
-    
+
     def access_path(self) -> Path:
         return self.__path
 
@@ -46,6 +45,11 @@ class Cleaner:
 
             ext_p.mkdir(parents=True, exist_ok=True)
             move(full_path, ext_p.joinpath(full_path.name))
+
+    def recycle(self) -> None:
+        for elem in self.__path.iterdir():
+            if elem.is_dir() and not any(elem.iterdir()):
+                elem.rmdir()
 
 
 def confirmation(action: str) -> bool:
@@ -92,15 +96,15 @@ def main() -> None:
                 exts = cleaner.get_ext()
                 cleaner.package(exts)
         case "cleanbg":
-            inp = confirmation("watch and package")
-            if inp:
-                runner = wm.Runner(cleaner.access_path(), False)
-                runner.start()
+            runner = wm.Runner(cleaner.access_path(), False)
+            runner.start()
         case "watch":
             inp = confirmation("watch")
             if inp:
                 runner = wm.Runner(cleaner.access_path(), True)
                 runner.start()
+        case "recycle":
+            cleaner.recycle()
         case _:
             print("No match for given argument")
 
