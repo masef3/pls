@@ -2,20 +2,21 @@ import sys
 from dir_cleaner import Cleaner, confirmation
 from pathlib import Path
 import watch_module as wm
+from cmd_args import help_
 
 
 def main() -> None:
     args = sys.argv
     cleaner = Cleaner()
     if (len(args) < 2):
-        help()
+        help_()
         return
 
     arg = args[1]
 
     match arg:
         case "--help" | "-h":
-            help()
+            help_()
 
         case "show":
             cleaner.show_path()

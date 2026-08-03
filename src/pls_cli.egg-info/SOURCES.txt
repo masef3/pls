@@ -1,0 +1,13 @@
+LICENSE
+README.md
+pyproject.toml
+src/cmd_args.py
+src/dir_cleaner.py
+src/main.py
+src/watch_module.py
+src/pls_cli.egg-info/PKG-INFO
+src/pls_cli.egg-info/SOURCES.txt
+src/pls_cli.egg-info/dependency_links.txt
+src/pls_cli.egg-info/entry_points.txt
+src/pls_cli.egg-info/requires.txt
+src/pls_cli.egg-info/top_level.txt

@@ -1,4 +1,4 @@
-def help() -> None:
+def help_() -> None:
     msg = """
     pls is an automatization utility for linux.
 
