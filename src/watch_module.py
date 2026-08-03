@@ -53,7 +53,7 @@ class Wd_(Logger):
 
         try:
             while True:
-                time.sleep(5)
+                time.sleep(1)
         except KeyboardInterrupt:
             self.observer.stop()
 
