@@ -1,8 +1,5 @@
 from pathlib import Path
-import sys
 from shutil import move
-from cmd_args import help
-import watch_module as wm
 
 
 class Cleaner:
@@ -55,10 +52,10 @@ class Cleaner:
 def confirmation(action: str) -> bool:
     count = 0
     while count < 5:
-        inp = input(f"Do you really want to {action}: y/n: \n")
+        inp = input(f"Do you really want to {action}: y/n: ")
         if inp == "yes" or inp == "y":
             return True
-        elif inp == "n" or "no":
+        elif inp == "n" or inp == "no":
             return False
         count += 1
 
@@ -68,46 +65,3 @@ def confirmation(action: str) -> bool:
 def clean(cleaner: Cleaner) -> None:
     files = cleaner.get_ext()
     cleaner.package(files)
-
-
-def main() -> None:
-    args = sys.argv
-    cleaner = Cleaner()
-    if (len(args) < 2):
-        help()
-        return
-
-    arg = args[1]
-    match arg:
-        case "--help":
-            help()
-        case "-h":
-            help()
-        case "show":
-            cleaner.show_path()
-        case "change":
-            if (len(args) < 3):
-                cleaner.change_path(None)
-            else:
-                cleaner.change_path(Path(args[2]))
-        case "clean":
-            inp = confirmation("package")
-            if inp:
-                exts = cleaner.get_ext()
-                cleaner.package(exts)
-        case "cleanbg":
-            runner = wm.Runner(cleaner.access_path(), False)
-            runner.start()
-        case "watch":
-            inp = confirmation("watch")
-            if inp:
-                runner = wm.Runner(cleaner.access_path(), True)
-                runner.start()
-        case "recycle":
-            cleaner.recycle()
-        case _:
-            print("No match for given argument")
-
-
-if __name__ == "__main__":
-    main()

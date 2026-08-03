@@ -10,6 +10,7 @@ def help() -> None:
         change_path Changes working directory of the program
         watch       Watches and prints all modifications of wanted directory
         cleanbg     Runs online cleaner
+        show        Shows working directory
 
     Flags:
         -h, --help  help for pls
