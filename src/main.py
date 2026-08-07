@@ -7,7 +7,12 @@ from cmd_args import help_
 
 def main() -> None:
     args = sys.argv
+    if len(args) > 3:
+        print("Too many arguments")
+        return
+
     cleaner = Cleaner()
+
     if (len(args) < 2):
         help_()
         return
