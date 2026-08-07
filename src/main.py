@@ -20,7 +20,7 @@ def main() -> None:
     arg = args[1]
 
     match arg:
-        case "--help" | "-h":
+        case "--help" | "-h" | "help":
             help_()
 
         case "show":
