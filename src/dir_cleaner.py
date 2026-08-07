@@ -1,10 +1,20 @@
 from pathlib import Path
 from shutil import move
+import json
 
 
 class Cleaner:
+    conf = Path.cwd() / "pls_conf.json"
+
     def __init__(self) -> None:
-        self.__path = Path.home().joinpath("Downloads")
+        if not self.conf.exists():
+            self.__path = Path.home().joinpath("Downloads")
+        else:
+            try:
+                with open(self.conf, "r") as cfg:
+                    self.__path = Path(json.load(cfg)["path"])
+            except Exception:
+                self.__path = Path.home().joinpath("Downloads")
 
     def show_path(self) -> None:
         print(self.__path)
@@ -13,14 +23,27 @@ class Cleaner:
         return self.__path
 
     def change_path(self, new_path: Path | None) -> None:
+
         if new_path is None:
             self.__path = Path.home()
             print(f"Path has been set to {self.__path}")
             return
 
         assert new_path is not None
+        if str(new_path) == "default":
+            self.__path = Path.home() / "Downloads"
+            print(f"Path has been set to {self.__path}")
+            return
+
+        assert new_path.exists()
         self.__path = new_path
-        print("Path has been set")
+        try:
+            with open(self.conf, "w") as cfg:
+                json.dump({"path": str(self.__path)}, cfg)
+        except Exception:
+            self.__path = Path.home()
+
+        print(f"Path has been set to {self.__path}")
 
     def get_ext(self) -> dict[Path, Path]:
         res: dict[Path, Path] = {}

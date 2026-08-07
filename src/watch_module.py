@@ -64,3 +64,6 @@ class Runner(Wd_):
 
     def start(self) -> None:
         self.watch()
+
+    def stop(self) -> None:
+        self.observer.stop()

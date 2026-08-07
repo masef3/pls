@@ -1,2 +1,4 @@
 # pls
-Program for simplyfing everyday usage in linux enviroment
+Automatization tool for organizing directories
+
+# TODO
