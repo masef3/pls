@@ -1,4 +1,14 @@
-### Automatization tool for organizing directories
+# pls
+
+> An automation tool for organizing directories
+
+## Installation
+
+```
+git clone https://github.com/masef3/pls.git
+cd pls
+pip install -r requirements.txt
+```
 
 ## Features
 
