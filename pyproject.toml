@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pls-cli"
-version = "0.1.0"
+version = "0.1.1"
 description = "Automation tool for organizing directories in Linux"
 readme = "README.MD"
 requires-python = ">=3.10"
