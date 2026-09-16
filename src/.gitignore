@@ -2,5 +2,3 @@ __pycache__
 .mypy_cache
 pls_cli.egg-info/*
 pls_conf.json
-../build
-../build/lib
