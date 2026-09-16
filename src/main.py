@@ -1,5 +1,5 @@
 import sys
-from dir_cleaner import Cleaner, confirmation
+from dir_cleaner import Cleaner, confirmation, Trigger
 from pathlib import Path
 import watch_module as wm
 from cmd_args import help_
@@ -39,13 +39,13 @@ def main() -> None:
                 cleaner.package(exts)
 
         case "cleanbg":
-            runner = wm.Runner(cleaner.access_path(), False)
+            runner = wm.Runner(cleaner.access_path(), Trigger.OFF_WATCH)
             runner.start()
 
         case "watch":
             inp = confirmation("watch")
             if inp:
-                runner = wm.Runner(cleaner.access_path(), True)
+                runner = wm.Runner(cleaner.access_path(), Trigger.ON_WATCH)
                 runner.start()
 
         case "recycle":

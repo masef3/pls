@@ -2,12 +2,12 @@ from watchdog.observers import Observer
 from pathlib import Path
 from watchdog.events import FileSystemEventHandler, FileSystemEvent
 import time
-from dir_cleaner import Cleaner, clean
+from dir_cleaner import Cleaner, clean, Trigger
 
 
 class Logger(FileSystemEventHandler):
 
-    def __init__(self, on_watch: bool) -> None:
+    def __init__(self, on_watch: Trigger) -> None:
         super().__init__()
         self.on_watch = on_watch
         self.call_flag: bool = False
@@ -39,7 +39,7 @@ class Logger(FileSystemEventHandler):
 
 
 class Wd_(Logger):
-    def __init__(self, wd_path: Path, on_watch: bool) -> None:
+    def __init__(self, wd_path: Path, on_watch: Trigger) -> None:
         super().__init__(on_watch)
         self.__wd_path = wd_path
         self.observer = Observer()
@@ -59,7 +59,7 @@ class Wd_(Logger):
 
 
 class Runner(Wd_):
-    def __init__(self, wd_path: Path, on_watch: bool) -> None:
+    def __init__(self, wd_path: Path, on_watch: Trigger) -> None:
         super().__init__(wd_path, on_watch)
 
     def start(self) -> None:

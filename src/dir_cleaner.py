@@ -1,6 +1,12 @@
 from pathlib import Path
 from shutil import move
 import json
+from enum import Enum
+
+
+class Trigger(Enum):
+    ON_WATCH = True
+    OFF_WATCH = False
 
 
 class Cleaner:
