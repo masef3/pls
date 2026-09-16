@@ -3,3 +3,4 @@ __pycache__
 pls_cli.egg-info/*
 pls_conf.json
 ../build
+../build/lib
