@@ -43,10 +43,8 @@ def main() -> None:
             runner.start()
 
         case "watch":
-            inp = confirmation("watch")
-            if inp:
-                runner = wm.Runner(cleaner.access_path(), Trigger.ON_WATCH)
-                runner.start()
+            runner = wm.Runner(cleaner.access_path(), Trigger.ON_WATCH)
+            runner.start()
 
         case "recycle":
             cleaner.recycle()
