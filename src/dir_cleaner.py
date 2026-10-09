@@ -70,8 +70,12 @@ class Cleaner:
                 suff = ext.name.lstrip(".")
                 ext_p = self.__path.joinpath(suff)
                 full_path = self.__path.joinpath(f"{name.name}.{suff}")
-
+                if ext_p.exists() and not ext_p.is_dir():
+                    continue
                 ext_p.mkdir(parents=True, exist_ok=True)
+                if ext_p.joinpath(full_path.name).exists():
+                    continue
+
                 move(full_path, ext_p.joinpath(full_path.name))
 
     def recycle(self) -> None:
