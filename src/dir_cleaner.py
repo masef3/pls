@@ -2,6 +2,7 @@ from pathlib import Path
 from shutil import move
 import json
 from enum import Enum
+from collections import defaultdict
 
 
 class Trigger(Enum):
@@ -51,26 +52,27 @@ class Cleaner:
 
         print(f"Path has been set to {self.__path}")
 
-    def get_ext(self) -> dict[Path, Path]:
-        res: dict[Path, Path] = {}
+    def get_ext(self) -> dict[Path, list[Path]]:
+        res: dict[Path, list[Path]] = defaultdict(list)
         for file in self.__path.iterdir():
             filename, file_ext = Path(file.stem), Path(file.suffix)
             if Path(file).is_file():
-                res[filename] = file_ext
+                res[filename].append(file_ext)
 
         return res
 
-    def package(self, files: dict[Path, Path]) -> None:
-        for name, ext in files.items():
-            if ext.is_dir():
-                continue
+    def package(self, files: dict[Path, list[Path]]) -> None:
+        for name, ext_list in files.items():
+            for ext in ext_list:
+                if ext.is_dir():
+                    continue
 
-            suff = ext.name.lstrip(".")
-            ext_p = self.__path.joinpath(suff)
-            full_path = self.__path.joinpath(f"{name.name}.{suff}")
+                suff = ext.name.lstrip(".")
+                ext_p = self.__path.joinpath(suff)
+                full_path = self.__path.joinpath(f"{name.name}.{suff}")
 
-            ext_p.mkdir(parents=True, exist_ok=True)
-            move(full_path, ext_p.joinpath(full_path.name))
+                ext_p.mkdir(parents=True, exist_ok=True)
+                move(full_path, ext_p.joinpath(full_path.name))
 
     def recycle(self) -> None:
         for elem in self.__path.iterdir():
