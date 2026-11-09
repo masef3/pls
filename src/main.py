@@ -49,7 +49,7 @@ def main() -> None:
         case "recycle":
             cleaner.recycle()
 
-        case "print_all":
+        case "print_exts":
             cleaner.print_exts(exts)
 
         case _:
