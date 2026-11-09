@@ -38,3 +38,6 @@ pip install .
 
 * **`pls recycle`**  
   Finds and removes any empty subdirectories in the target path.
+
+* **`pls print_exts`**
+  Prints the mapping of Filename -> extensions.
