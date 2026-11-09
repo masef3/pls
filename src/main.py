@@ -17,6 +17,7 @@ def main() -> None:
         help_()
         return
 
+    exts = cleaner.get_ext()
     arg = args[1]
 
     match arg:
@@ -35,7 +36,6 @@ def main() -> None:
         case "clean":
             inp = confirmation("package")
             if inp:
-                exts = cleaner.get_ext()
                 cleaner.package(exts)
 
         case "cleanbg":
@@ -48,6 +48,9 @@ def main() -> None:
 
         case "recycle":
             cleaner.recycle()
+
+        case "print_all":
+            cleaner.print_exts(exts)
 
         case _:
             print("No match for given argument")

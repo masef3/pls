@@ -83,6 +83,14 @@ class Cleaner:
             if elem.is_dir() and not any(elem.iterdir()):
                 elem.rmdir()
 
+    def print_exts(self, files: dict[Path, list[Path]]) -> None:
+        for name, ext_list in files.items():
+            print(f"{name.name}")
+            for ext in ext_list:
+                print(f"{ext.name}", end=" ")
+            print("\n")
+            print("-------------------")
+
 
 def confirmation(action: str) -> bool:
     count = 0
