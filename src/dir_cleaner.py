@@ -92,8 +92,6 @@ class Cleaner:
 
                 ext_p = self.__path.joinpath(suff_res)
                 full_path = self.__path.joinpath(file_name)
-                if not full_path.is_file():
-                    continue
 
                 if ext_p.exists() and not ext_p.is_dir():
                     continue
