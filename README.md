@@ -7,8 +7,7 @@
 ```
 git clone https://github.com/masef3/pls.git
 cd pls
-pip install -r requirements.txt
-pip install .
+pipx install .
 ```
 
 ## Features
