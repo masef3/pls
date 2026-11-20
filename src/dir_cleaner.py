@@ -61,22 +61,44 @@ class Cleaner:
 
         return res
 
+    @staticmethod
+    def __check_for_duplicate_path(path_to_file: Path, directory: Path) \
+            -> Path:
+        target = directory / path_to_file.name
+        if not target.exists():
+            return target
+
+        name = path_to_file.stem
+        suff = path_to_file.suffix
+
+        counter = 1
+        while True:
+            tmp = directory / f"{name}_{counter}{suff}"
+            if not tmp.exists():
+                return tmp
+            counter += 1
+
     def package(self, files: dict[Path, list[Path]]) -> None:
         for name, ext_list in files.items():
             for ext in ext_list:
-                if ext.is_dir():
-                    continue
 
                 suff = ext.name.lstrip(".")
-                ext_p = self.__path.joinpath(suff)
-                full_path = self.__path.joinpath(f"{name.name}.{suff}")
+                if suff:
+                    suff_res = suff
+                    file_name = f"{name.name}.{suff}"
+                else:
+                    suff_res = "other"
+                    file_name = name.name
+
+                ext_p = self.__path.joinpath(suff_res)
+                full_path = self.__path.joinpath(file_name)
+
                 if ext_p.exists() and not ext_p.is_dir():
                     continue
                 ext_p.mkdir(parents=True, exist_ok=True)
-                if ext_p.joinpath(full_path.name).exists():
-                    continue
 
-                move(full_path, ext_p.joinpath(full_path.name))
+                target = self.__check_for_duplicate_path(full_path, ext_p)
+                move(full_path, target)
 
     def recycle(self) -> None:
         for elem in self.__path.iterdir():

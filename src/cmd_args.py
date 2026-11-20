@@ -15,6 +15,7 @@ def help_() -> None:
         cleanbg     Runs online cleaner
         show        Shows working directory
         print_exts  Prints mapping of filename -> extensions
+        recycle     Deletes all empty directories
 
     Flags:
         -h, --help, help
