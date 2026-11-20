@@ -198,20 +198,22 @@ class TestCleanBasics:
 # clean(): things that must NOT be touched
 # --------------------------------------------------------------------------- #
 class TestCleanLeavesThingsAlone:
-    def test_file_without_extension_is_not_moved(self, cleaner, work):
+    def test_file_without_extension_is_moved_to_other(self, cleaner, work):
         touch(work, "README", "Makefile")
         clean(cleaner)
-        assert listing(work) == {"README", "Makefile"}
+        assert listing(work) == {"other"}
+        assert listing(work / "other") == {"README", "Makefile"}
 
-    def test_hidden_file_without_extension_is_not_moved(self, cleaner, work):
+    def test_hidden_file_without_extension_is_moved_to_other(self, cleaner, work):
         touch(work, ".bashrc")
         clean(cleaner)
-        assert listing(work) == {".bashrc"}
+        assert listing(work) == {"other"}
+        assert listing(work / "other") == {".bashrc"}
 
     def test_files_without_extension_do_not_block_others(self, cleaner, work):
         touch(work, "README", "a.txt")
         clean(cleaner)
-        assert (work / "README").is_file()
+        assert (work / "other" / "README").is_file()
         assert (work / "txt" / "a.txt").is_file()
 
     def test_existing_subdirectories_are_not_recursed_into(self, cleaner, work):
@@ -359,10 +361,11 @@ class TestPackage:
         with pytest.raises(FileNotFoundError):
             cleaner.package(snapshot)
 
-    def test_entry_with_empty_suffix_is_skipped(self, cleaner, work):
+    def test_entry_with_empty_suffix_is_moved_to_other(self, cleaner, work):
         touch(work, "README")
         cleaner.package({Path("README"): [Path("")]})
-        assert listing(work) == {"README"}
+        assert listing(work) == {"other"}
+        assert listing(work / "other") == {"README"}
 
 
 # --------------------------------------------------------------------------- #
@@ -370,13 +373,14 @@ class TestPackage:
 # current code does not have yet). When you fix the bug, pytest reports XPASS.
 # --------------------------------------------------------------------------- #
 class TestKnownIssues:
-    def test_name_collision_must_not_overwrite(self, cleaner, work):
+    def test_name_collision_renames_with_counter(self, cleaner, work):
         (work / "txt").mkdir()
         touch(work / "txt", "a.txt", content="OLD")
         touch(work, "a.txt", content="NEW")
         clean(cleaner)
         assert (work / "txt" / "a.txt").read_text() == "OLD"
-        assert (work / "a.txt").read_text() == "NEW"  # left in place, nothing lost
+        assert (work / "txt" / "a_1.txt").read_text() == "NEW"
+        assert not (work / "a.txt").exists()
 
     def test_file_named_like_extension_folder(self, cleaner, work):
         touch(work, "txt", "a.txt")
